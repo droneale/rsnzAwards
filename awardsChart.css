@@ -1,0 +1,37 @@
+svg {
+  font: 10px sans-serif;
+}
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.award line {
+  stroke: #ddd;
+  stroke-dasharray: 1,1;
+  shape-rendering: crispEdges;
+}
+
+.award text {
+  text-anchor: end;
+}
+
+.person path {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.person circle {
+	stroke-width: 1.5px;
+}
+
+.person .M path { stroke: rgb(31,120,180); opacity: 0.3;}
+.person .M circle { stroke: rgb(31,120,180); fill: rgb(31,120,180); fill-opacity: 0.2}
+
+.person .F path { stroke: rgb(51,160,44); opacity: 0.3;}
+.person .F circle { stroke: rgb(51,160,44); fill: rgb(51,160,44); fill-opacity: 0.2}

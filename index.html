@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<link href="awardsChart.css" rel="stylesheet">
+</head>
+
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<!--script src="d3-master/d3.js"></script-->
+
+<script>
+
+var awards = []; // lazily loaded
+
+var formatTime = d3.time.format("%Y");
+
+var margin = {top: 20, right: 30, bottom: 20, left: 170},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.time.scale()
+    .domain([formatTime.parse("1910"),formatTime.parse("2015")])
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([0, height]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .ticks(8)
+    .tickFormat(formatTime);
+
+var line = d3.svg.line()
+    .x(function(d) { return x(d.time); })
+    .y(function(d) { return y(d.award.awardorder); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("y", -margin.top)
+    .attr("width", width)
+    .attr("height", height + margin.top + margin.bottom);
+
+d3.csv("awardsTable.csv", type, function(error, persons) {
+  y.domain(d3.extent(awards, function(d) { return d.awardorder; }));
+
+  var award = svg.append("g")
+      .attr("class", "award")
+    .selectAll("g")
+      .data(awards)
+    .enter().append("g")
+      .attr("transform", function(d) { return "translate(0," + y(d.awardorder) + ")"; });
+
+  award.append("text")
+      .attr("x", -6)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.awardname; });
+
+  award.append("line")
+      .attr("x2", width);
+
+  svg.append("g")
+      .attr("class", "x top axis")
+      .call(xAxis.orient("top"));
+
+  svg.append("g")
+      .attr("class", "x bottom axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis.orient("bottom"));
+
+  var person = svg.append("g")
+      .attr("class", "person")
+      .attr("clip-path", "url(#clip)")
+    .selectAll("g")
+      .data(persons.filter(function(d) { return /[MF]/.test(d.gender); }))
+    .enter().append("g")
+      .attr("class", function(d) { return d.gender; });
+
+  person.append("path")
+      .attr("d", function(d) { return line(d.awards); });
+
+  person.selectAll("circle")
+      .data(function(d) { return d.awards; })
+    .enter().append("circle")
+      .attr("transform", function(d) { return "translate(" + x(d.time) + "," + y(d.award.awardorder) + ")"; })
+      .attr("r", 2.5)
+		.append("svg:title")
+			.text(function(d) { return d.person; }); //need to add person info to awards data before this will work.
+});
+
+function type(d, i) {
+
+  // Extract the awards from the "award|*" columns.
+  if (!i) for (var k in d) {
+    if (/^award\|/.test(k)) {
+      var p = k.split("|");
+      awards.push({
+        key: k,
+        awardname: p[1],
+        awardorder: +p[2]
+      });
+    }
+  }
+
+  return {
+    person: d.name,
+    gender: d.gender,
+    awards: awards
+        .map(function(s) { return {award: s, time: formatTime.parse(d[s.key])}; })
+        .filter(function(s) { return s.time != null; })
+  };
+}
+
+</script>

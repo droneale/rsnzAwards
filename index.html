@@ -80,7 +80,7 @@ d3.csv("awardsTable.csv", type, function(error, persons) {
       .attr("class", "person")
       .attr("clip-path", "url(#clip)")
     .selectAll("g")
-      .data(persons.filter(function(d) { return /[MF]/.test(d.gender); }))
+      .data(persons.filter(function(d) { return /[MFG]/.test(d.gender); }))
     .enter().append("g")
       .attr("class", function(d) { return d.gender; });
 

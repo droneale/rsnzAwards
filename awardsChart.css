@@ -35,3 +35,6 @@ svg {
 
 .person .F path { stroke: rgb(51,160,44); opacity: 0.3;}
 .person .F circle { stroke: rgb(51,160,44); fill: rgb(51,160,44); fill-opacity: 0.2}
+
+.person .G path { stroke: rgb(251,154,153); opacity: 0.3;}
+.person .G circle { stroke: rgb(251,154,153); fill: rgb(251,154,153); fill-opacity: 0.2}

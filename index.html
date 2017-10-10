@@ -17,8 +17,8 @@ var awards = []; // lazily loaded
 var formatTime = d3.time.format("%Y");
 
 var margin = {top: 20, right: 30, bottom: 20, left: 170},
-    width = 1360 - margin.left - margin.right,
-    height = 550 - margin.top - margin.bottom;
+    width = 1060 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
 
 var x = d3.time.scale()
     .domain([formatTime.parse("1910"),formatTime.parse("2019")])
@@ -91,7 +91,7 @@ d3.csv("awardsTable.csv", type, function(error, persons) {
       .data(function(d) { return d.awards; })
     .enter().append("circle")
       .attr("transform", function(d) { return "translate(" + x(d.time) + "," + y(d.award.awardorder) + ")"; })
-      .attr("r", 4.5)
+      .attr("r", 2.5)
 		.append("svg:title")
 			.text(function(d) { return d.person; }); //need to add person info to awards data before this will work.
 });
